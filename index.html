@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container">
+                <div class="header__logo">
+                    <img src="img/icon/icons8-broom-100.png" class="logo__img" alt="">
+                    <div class="logo_text">Web Cleaner</div>
+                </div>
+                <a href="#">
+                    
+                    <img src="img/icons8-привод-100.png" alt="" class="header__settings">
+                </a>
+                <!-- <img src="img/icons8-привод-100.png" alt="" class="header__settings"> -->
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="main__container">
+                <a href="#" class="button__clean button">
+                    <div class="button__title">Очистка</div>
+                    <div class="button__subtitle">Выберите компоненты, которые хотите удалить, и очистите от них браузерер</div>
+                </a>
+
+                <a href="#" class="button__delete button">
+                    <div class="button__title">Удаление на странице</div>
+                    <div class="button__subtitle">Удалите кэш, cookies, fileSystems, indexedDB, localStorage, serviceWorkers, webSQL с текущей страницы</div>
+                </a>
+
+                <div class="main__buttonGroup">
+                    <a href="#" class="button buttonGroup__button">
+                        <div class="button__title buttonGroup__title">Белый список</div>
+                        <div class="button__subtitle buttonGroup__text">Настройте список исключений</div>
+                    </a>
+                    <a href="#" class="button buttonGroup__button b__left">
+                        <div class="button__title buttonGroup__title">Черный список</div>
+                        <div class="button__subtitle buttonGroup__text">Сайты для авто удаления из истории</div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container">
+                <div class="header__logo">
+                    <img src="img/icon/icons8-broom-100.png" class="logo__img" alt="">
+                    <div class="logo_text">Web Cleaner</div>
+                </div>
+                <a href="settings.html">
+                    
+                    <img src="img/icons8-привод-100.png" alt="" class="header__settings">
+                </a>
+            </div>
+        </header>
+        <main class="main">
+            <div class="main__container">
+                <div class="subheader">
+                    <a href="popup.html" class="subheader__icon">
+                        <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.324982 6.54903L6.56761 0.306396C6.97614 -0.102132 7.63849 -0.102132 8.04702 0.306396C8.45555 0.714925 8.45555 1.37728 8.04702 1.78581L2.49923 7.3336L8.04702 12.8814C8.45555 13.2899 8.45555 13.9523 8.04702 14.3608C7.63849 14.7693 6.97614 14.7693 6.56761 14.3608L0.324982 8.11818C-0.108327 7.68487 -0.108327 6.98234 0.324982 6.54903Z" fill="#448CF2"/>
+                        </svg>
+                    </a>
+                    <div class="subheader__text lng-clearTitle">Очистка</div>
+                </div>
+            
+                <div class="checkbox__group">
+                    <div class="checkbox__title lng-cbTitle">Выберите компоненты для удаления</div>
+                    <ul class="checkbox__panel">
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="history" type="checkbox" class="check">
+                                <label class="checkbox__text lng-history" for="history">История</label>
+                            </div>
+                        </li>
+
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="autoFill" type="checkbox" class="check">
+                                <label class="checkbox__text lng-autoFill" for="autoFill">AutoFill form</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="cache" type="checkbox" class="check">
+                                <label class="checkbox__text lng-cache" for="cache">Кэш</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="localStorage" type="checkbox" class="check">
+                                <label class="checkbox__text lng-localStorage" for="localStorage">Local Storage</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="downloads" type="checkbox" class="check">
+                                <label class="checkbox__text lng-downloads" for="downloads">Загрузки</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="indexedDB" type="checkbox" class="check">
+                                <label class="checkbox__text lng-indexedDB" for="indexedDB">IndexedDB</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="passwords" type="checkbox" class="check">
+                                <label class="checkbox__text lng-passwords" for="passwords">Пароли</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="wsd" type="checkbox" class="check">
+                                <label class="checkbox__text lng-wsd" for="wsd">Web SQL Data</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="appCache" type="checkbox" class="check">
+                                <label class="checkbox__text lng-appcache" for="appCache">App Cache</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="fileSystems" type="checkbox" class="check">
+                                <label class="checkbox__text lng-fileSystems" for="fileSystems">File Systems</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="pluginData" type="checkbox" class="check">
+                                <label class="checkbox__text lng-pluginData" for="pluginData">Plugin Data</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="serviceWorkers" type="checkbox" class="check">
+                                <label class="checkbox__text lng-serviceWorkers" for="serviceWorkers">Service Workers</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="cookies" type="checkbox" class="check">
+                                <label class="checkbox__text lng-cookies" for="cookies">Cookies</label>
+                            </div>
+                        </li>
+                        <li class="checkbox__item">
+                            <div class="checkbox">
+                                <input id="cacheStorage" type="checkbox" class="check">
+                                <label class="checkbox__text lng-cacheStorage" for="cacheStorage">Cache Storage</label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="footer__container">
+                <div class="footer__list">
+                    <ul class="list__dropdown" id="list__dropdown">
+                        <li><button class="list__item lng-fiveMinutes" id="five__minutes">За последние 5 минут</button></li>
+                        <li><button class="list__item lng-hour" id="hour">За последний час</button></li>
+                        <li><button class="list__item lng-day" id="day">За последние 24 часа</button></li>
+                        <li><button class="list__item lng-week" id="week">За последние 7 дней</button></li>
+                        <li><button class="list__item lng-month" id="month">За последние 30 дней</button></li>
+                        <li><button class="list__item lng-allTime" id="all__time">За все время</button></li>
+                    </ul>
+                    <button class="button__grey" id="dropdown__button">
+                        <div class="clock__icon">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <rect width="20" height="20" fill="url(#pattern0)"/>
+                                <defs>
+                                <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                <use xlink:href="#image0_29_234" transform="scale(0.01)"/>
+                                </pattern>
+                                <image id="image0_29_234" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="buttonGrey__text">За последний час</div>
+                        <div class="arrow__icon">
+                            <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.17796 3.47537L1.21327 0.171467C0.899432 -0.0900667 0.433 -0.047664 0.171467 0.266176C-0.0900668 0.580016 -0.0476638 1.04645 0.266176 1.30798L4.70441 5.00651C4.97873 5.23511 5.37719 5.23511 5.65151 5.00651L10.0897 1.30798C10.4036 1.04645 10.446 0.580016 10.1845 0.266176C9.92292 -0.047664 9.45649 -0.0900667 9.14265 0.171467L5.17796 3.47537Z" fill="#448CF2"/>
+                            </svg>   
+                        </div>
+                    </button>
+                </div>
+                <button class="button" id="buttonClear">
+                    <div class="button__text lng-buttonClear">Очистить</div>
+                </button>
+            </div>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
