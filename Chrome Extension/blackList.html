@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container">
+                <div class="header__logo">
+                    <img src="img/icon/icons8-broom-100.png" class="logo__img" alt="">
+                    <div class="logo_text">Web Cleaner</div>
+                </div>
+                <a href="settings.html">
+                    
+                    <img src="img/icons8-привод-100.png" alt="" class="header__settings">
+                </a>
+            </div>
+        </header>
+        <main class="main">
+            <div class="main__container">
+                <div class="subheader">
+                    <a href="popup.html" class="subheader__icon">
+                        <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.324982 6.54903L6.56761 0.306396C6.97614 -0.102132 7.63849 -0.102132 8.04702 0.306396C8.45555 0.714925 8.45555 1.37728 8.04702 1.78581L2.49923 7.3336L8.04702 12.8814C8.45555 13.2899 8.45555 13.9523 8.04702 14.3608C7.63849 14.7693 6.97614 14.7693 6.56761 14.3608L0.324982 8.11818C-0.108327 7.68487 -0.108327 6.98234 0.324982 6.54903Z" fill="#448CF2"/>
+                        </svg>
+                    </a>
+                    <div class="subheader__text lng-blackListTitle">Черный список</div>
+                </div>
+                <div class="main__body" id="main__body">
+                    <div class="list__block" id="listBlock_black">
+                            
+                    </div>
+                    <!-- Заглушка для пустого списка -->
+                    <div class="empty__plug">
+                        <div class="empty__img">
+                            <img src="img/List/iconAdd.svg" alt="">
+                        </div>
+                        <div class="empty__title lng-blackEmptyTitle">Добавьте элемент в список</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="footer__container">
+                <div class="input__block">
+                    <div class="input__title lng-blackInputTitle">Введите ссылку</div>
+                    <input placeholder="Например: https://www.google.ru/" type="text" class="input__area" id="input__area">
+                </div>
+                <button class="button" id="btnAddToWhite">
+                    <div class="button__text lng-blcakBtn">Добавить</div>
+                </button>
+            </div>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
