@@ -719,13 +719,7 @@ function changeBtnThemeContent() {
 }
 
 
-const requestURL = 'http://localhost:4444/api/user'
-const xhr = new XMLHttpRequest()
-xhr.open('GET', requestURL)
-xhr.onload = () => {
-    console.log(JSON.parse(xhr.response))
-}
-xhr.send()
+
 
 
 

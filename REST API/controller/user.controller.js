@@ -13,6 +13,9 @@ class userCotroller {
         res.json(users.rows)
     }
     async getOneUser(req, res) {
+        const login = req.params.login
+        const users = await db.query('select * from "User" where "userLogin" = $1', [login])
+        res.json(users.rows[0])
         
     }
     async deleteUser(req, res) {

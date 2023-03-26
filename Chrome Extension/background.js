@@ -5,7 +5,10 @@ chrome.runtime.onMessage.addListener(
             let sites
             chrome.storage.local.get(["blackLinks"]).then((result) => {
                 
-                sites = JSON.parse(result.blackLinks)
+                if(sites) {
+                    sites = JSON.parse(result.blackLinks)
+                }
+                
 
 
                 chrome.history.search({text: '', maxResults: 100} , function(data) {

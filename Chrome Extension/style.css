@@ -80,6 +80,8 @@ body {
 
 }
 
+
+
 /* -------------------------------------------------- */
 .header__container {
     margin-top: 15px;
@@ -87,16 +89,21 @@ body {
     align-items: center;
 }
 
+
+
 .header__logo {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
+
 .logo__img {
     width: 35px;
     height: 35px;
 }
+
+
 
 .logo_text {
     font-family: 'Roboto';
@@ -104,9 +111,9 @@ body {
     color: #448CF2;
     font-size: 18px;
     padding-left: 8px;
-
-
 }
+
+
 
 .header__settings {
     width: 26px;
@@ -541,6 +548,121 @@ body {
 .settingsBody {
     margin-top: 20px;
     padding-bottom: 251px;
+}
+
+/* =========================== fullpage ========================================= */
+
+.wrapper-fullpage {
+    width: 100%;
+    background-color: #F4F4F4;
+    height: 100vh;
+}
+
+.header__container-fullpage {
+    width: 100%;
+    margin-top: 0;
+    justify-content: center;
+}
+
+.header__logo-fullpage {
+    margin-top: 30px;
+}
+
+.logo__img-fullpage {
+    height: 79px;
+    width: 79px;
+}
+
+.logo_text-fullpage {
+    font-size: 34px;
+    padding-left: 13px;
+}
+
+/* ============================== */
+
+.main-fullpage__container {
+    justify-content: center;
+}
+
+.authBlock {
+    background-color: white;
+    width: 710px;
+    margin-top: 100px;
+    border-radius: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.authBlock__title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 40px;
+    color: #2F2F2F;
+    margin-bottom: 24px;
+}
+.inputBlock {
+    margin-bottom: 17px;
+}
+.inputBlock__title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18px;
+    color: #818C99;
+
+    margin: 0 0 3px 9px;
+}
+
+.input__area-fullpage {
+    width: 415px;
+    height: 45px;
+}
+
+.button-fullpage {
+    width: 415px;
+    height: 50px;
+    border-radius: 11px;
+    display: flex;
+    justify-content: center;
+}
+
+.regBlock {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    margin-top: 22px;
+}
+
+.reg__text {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 11px;
+    /* identical to box height */
+
+
+    color: #2F2F2F;
+}
+
+.btn__reg {
+    margin-left: 5px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 11px;
+    /* identical to box height */
+
+
+    color: #448CF2;
 }
 
 
