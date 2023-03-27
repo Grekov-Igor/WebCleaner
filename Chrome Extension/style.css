@@ -622,6 +622,7 @@ body {
 .input__area-fullpage {
     width: 415px;
     height: 45px;
+    margin-bottom: 0;
 }
 
 .button-fullpage {
@@ -665,6 +666,28 @@ body {
     color: #448CF2;
 }
 
+/* -------------------------------------------------------------------- */
+
+.authBlock-reg {
+    padding: 23px;
+    margin-top: 18px;
+}
+
+.nameBlock {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 17px;
+}
+
+.input__area-half {
+    width: 202px;
+    height: 45px;
+    margin-bottom: 0;
+}
+
+.nameBlock__name {
+    margin-right: 11px;
+}
 
 
 
