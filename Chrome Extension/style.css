@@ -120,6 +120,20 @@ body {
     height: 26px;
 }
 
+.header__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.header__account {
+    width: 26px;
+    height: 26px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 /* ----------------------------------------------------------- */
 .main__container {
     display: flex;
@@ -138,7 +152,23 @@ body {
     border-radius: 20px;
 
 }
+.button__logIn {
+    border-radius: 5px;
+    padding: 7px 18px;
+    margin-right: 10px;
+    
+}
 
+.logIn__text {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 13px;
+    
+
+    color: #FFFFFF;
+}
 .button__clean {
     margin-top: 33px;
 }
@@ -579,15 +609,20 @@ body {
 }
 
 /* ============================== */
-
+.main-fullpage {
+    height: 100%;
+}
 .main-fullpage__container {
     justify-content: center;
+    height: 100%;
+ 
+    align-items: center;
 }
 
 .authBlock {
     background-color: white;
     width: 710px;
-    margin-top: 100px;
+    /* margin-top: 100px; */
     border-radius: 25px;
 
     display: flex;
@@ -687,6 +722,123 @@ body {
 
 .nameBlock__name {
     margin-right: 11px;
+}
+
+/* -------------------------------------------------------------- */
+
+.main-acc__container {
+    width: 710px;
+    flex-direction: column;
+    
+}
+
+.profileBlock {
+    display: flex;
+    flex-direction: row;
+    background-color: #FFFFFF;
+    width: 100%;
+    border-radius: 25px;
+    padding: 17px 30px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 50px;
+
+}
+
+.profileBlock__user {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profileBlock__img {
+    width: 70px;
+    height: 70px;
+}
+
+.profileBlock__logOut {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.profileBlock__text {
+    margin-left: 25px;
+}
+
+.profileBlock__title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18px;
+    /* identical to box height */
+
+
+    color: #818C99;
+    
+}
+
+.profileBlock__name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 29px;
+
+    color: #2F2F2F;
+}
+
+.journal__title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 35px;
+
+    color: #2F2F2F;
+    margin-left: 30px;
+}
+
+.journal__buttons {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    color: #818C99;
+
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    padding-right: 30px;
+    margin-bottom: 7px;
+}
+
+.exportBtn {
+    margin-right: 15px;
+}
+
+.journalBlock__info {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18px;
+    color: #818C99;
+    text-align: center;
+}
+
+.journalBlock {
+    width: 100%;
+    height: 183px;
+    background-color: #FFFFFF;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 

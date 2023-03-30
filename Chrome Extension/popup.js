@@ -11,7 +11,7 @@ class LocalStorageUtil {
                 return JSON.parse(elementsLocalStorage)
             }
             return []
-        } else if (this.keyName === 'timePeriod' || this.keyName === 'lightTheme' || this.keyName === 'language') {
+        } else if (this.keyName === 'timePeriod' || this.keyName === 'lightTheme' || this.keyName === 'language' || this.keyName === 'userId') {
             if (elementsLocalStorage !== null) {
                 return elementsLocalStorage
             }
@@ -64,6 +64,8 @@ class LocalStorageUtil {
                     blackLinks: JSON.stringify(elements)
                 })
             }
+        } else  if (this.keyName === 'userId') {
+            localStorage.setItem(this.keyName, id)
         }
     }
 
@@ -93,6 +95,7 @@ const localStorageLinks = new LocalStorageUtil('links')
 const localStorageBlackLinks = new LocalStorageUtil('blackLinks')
 const localStorageLightTheme = new LocalStorageUtil('lightTheme')
 const localStorageLanguage = new LocalStorageUtil('language')
+const localStorageUser = new LocalStorageUtil('userId')
 
 
 // реализация функции смены языка
@@ -719,9 +722,100 @@ function changeBtnThemeContent() {
 }
 
 
+// при нажатии на кнопку входа переход на полноэкранную страницу авторизации
+
+// let btnLogIn = document.querySelector("#btnLogIn")
+
+// if (btnLogIn) {
+//     btnLogIn.addEventListener('click', goToAuth)
+// }
+
+function goToAuth() {
+    chrome.runtime.openOptionsPage()
+}
+
+
+// получаем id пользователя, если не авторизован - оставляем кнопку войти, 
+// если авторизован, то меняем на кнопку аккаунта
+let userId
+let result = localStorageUser.getElements()
+try {
+    // при выходе из аккаунта userID = 0
+    userId = JSON.parse(result)
+    
+    // console.log(userId)
+} catch(error) {
+    // если мы сюда попали, значит пока такого поля нет в памяти, значит пользователь ни разу не авторизировался
+    // console.log(result.userId)
+    userId = 0
+}
+// localStorageUser.putElements(JSON.stringify(userId))
+let headerButtons = document.getElementById("header__buttons")
+if(userId === 0) {
+    headerButtons.insertAdjacentHTML('afterbegin', `
+        <button class="button__logIn button" id="btnLogIn">
+            <div class="logIn__text">Войти</div>
+        </button>
+    `)
+    let btnLogIn = document.querySelector("#btnLogIn")
+    btnLogIn.addEventListener('click', goToAuth)
+
+
+} else {
+    headerButtons.insertAdjacentHTML('afterbegin', `
+        <img src="img/account.png" alt="" class="header__account" id="header__account">
+    `)
+    let btnAcc = document.querySelector("#header__account")
+    btnAcc.addEventListener('click', goToAcc)
+}
+
+function goToAcc() {
+    // chrome.runtime.openOptionsPage()
+    window.open(chrome.runtime.getURL('account.html'));
+    
+}
 
 
 
+// console.log(result)
+// chrome.storage.local.get(["userId"]).then((result) => {
+    
+    // try {
+    //     // при выходе из аккаунта userID = 0
+    //     userId = JSON.parse(result.userId)
+        
+    //     // console.log(userId)
+    // } catch(error) {
+    //     // если мы сюда попали, значит пока такого поля нет в памяти, значит пользователь ни разу не авторизировался
+    //     // console.log(result.userId)
+    //     userId = 0
+    // }
+    // localStorageUser.putElements(JSON.stringify(userId))
+    // let headerButtons = document.getElementById("header__buttons")
+    // if(userId === 0) {
+    //     headerButtons.insertAdjacentHTML('afterbegin', `
+    //         <button class="button__logIn button" id="btnLogIn">
+    //             <div class="logIn__text">Войти</div>
+    //         </button>
+    //     `)
+    //     let btnLogIn = document.querySelector("#btnLogIn")
+    //     btnLogIn.addEventListener('click', goToAuth)
+    
+
+    // } else {
+    //     headerButtons.insertAdjacentHTML('afterbegin', `
+    //         <img src="img/account.png" alt="" class="header__account" id="header__account">
+    //     `)
+    // }
+
+
+    
+
+// })
+
+// chrome.storage.local.set({
+//     userId: JSON.stringify(0)
+// })
 
 
 
