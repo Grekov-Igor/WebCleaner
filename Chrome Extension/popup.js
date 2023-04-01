@@ -1,3 +1,4 @@
+const requestURL = 'http://localhost:4444/api'
 // класс для работы с LocalStorage
 class LocalStorageUtil {
     constructor(keyName) {
@@ -102,7 +103,27 @@ const localStorageUser = new LocalStorageUtil('userId')
 
 let btnLanguage = document.getElementById("btnLanguage")
 if (btnLanguage) {
-    btnLanguage.addEventListener('click', changeLanguage)
+    btnLanguage.addEventListener('click', changeLanguageWithDB)
+}
+
+function changeLanguageWithDB() {
+
+    changeLanguage()
+    if(localStorageUser.getElements() != 0) {
+        let data = JSON.stringify({
+            settingsId: localStorageUser.getElements(),
+            settingsEng: localStorageLanguage.getElements()
+        })
+        fetch(`${requestURL}/settings/lang`, {
+            method: 'PUT',
+            body: data,
+            headers: {
+                'Content-type': 'application/json; charset=utf-8'
+            },
+        })
+    }
+    
+
 }
 
 let english = localStorageLanguage.getElements() === 'true' //переменная, хранящая язык
@@ -358,6 +379,22 @@ function chooseTimePeriod() {
 
     localStorageTimePeriod.putElements(id)
 
+    if(localStorageUser.getElements() != 0) {
+        // console.log(localStorageTimePeriod.getElements())
+        let data = JSON.stringify({
+            settingsId: localStorageUser.getElements(),
+            settingsTimePeriod: localStorageTimePeriod.getElements()
+        })
+
+        fetch(`${requestURL}/settings/timePeriod`, {
+            method: 'PUT',
+            body: data,
+            headers: {
+                'Content-type': 'application/json; charset=utf-8'
+            },
+        })
+    }
+
     let buttonGreyText = document.querySelector('.buttonGrey__text')
     // console.log(buttonGreyText.textContent)
 
@@ -422,6 +459,22 @@ function deleteOnThisPage() {
 //функция для заненсения id чекбокса в LocalStorage
 function checkBoxToStorage() {
     localStorageCheckBoxes.putElements(this.id)
+
+    if(localStorageUser.getElements() != 0) {
+        // console.log(localStorageCheckBoxes.getElements())
+        let data = JSON.stringify({
+            settingsId: localStorageUser.getElements(),
+            settingsCheckBoxes: JSON.stringify(localStorageCheckBoxes.getElements())
+        })
+        // console.log(data)
+        fetch(`${requestURL}/settings/checkBoxes`, {
+            method: 'PUT',
+            body: data,
+            headers: {
+                'Content-type': 'application/json; charset=utf-8'
+            },
+        })
+    }
 }
 
 //каждому чекбоксу задаем события на клик
@@ -429,25 +482,88 @@ for (let i = 0; i < checkBoxes.length; i++) {
     checkBoxes[i].addEventListener('click', checkBoxToStorage)
 }
 
-//достаем id активных чекбоксов из local storage и меняем у соответсвенных чекбоксов свойство checked на true
-let activeCheckBoxes = localStorageCheckBoxes.getElements()
-console.log(checkBoxes)
-if (activeCheckBoxes !== [] && checkBoxes.length !== 0) {
-    for (let i = 0; i < activeCheckBoxes.length; i++) {
-        let activeCheckBox = document.getElementById(activeCheckBoxes[i])
-        activeCheckBox.checked = true
+// выполняется на главной странице
+// при открытии главной страницы из бд достается тема и язык пользователя
+if(document.querySelector('.main__buttonGroup')) {
+    // console.log(localStorageUser.getElements())
+    let userId = localStorageUser.getElements()
+    if(userId != 0) {
+        
+        getDataAboutThemeAndLang(userId)
     }
 }
 
-console.log(document.getElementById(localStorageTimePeriod.getElements()))
-// && document.getElementById(localStorageTimePeriod.getElements() !== null
-if (localStorageTimePeriod.getElements() != '' && document.getElementById('dropdown__button') !== null) {
-    //достаем из localStorage данные о периоде времени
-    let storageTime = document.getElementById(localStorageTimePeriod.getElements())
-    //для найденного в памяти времени запускаем событие клик, чтобы изменить значения поля и переменной
-    show = false
-    storageTime.click()
+async function getDataAboutThemeAndLang(userId) {
+    let settings
+    let response = await fetch(`${requestURL}/settings/id=${userId}`)
+    settings = await response.json()
+    console.log(settings)
+    if(localStorageLanguage.getElements() != JSON.stringify(settings.settingsEngLang)) {
+        console.log(localStorageLanguage.getElements(), settings.settingsEngLang)
+        console.log(localStorageLanguage.getElements() !== settings.settingsEngLang)
+        // localStorageLanguage.putElements(settings.settingsEngLang)
+        changeLanguage()
+    }
+    console.log(localStorageLightTheme.getElements(), JSON.stringify(settings.settingsLightTheme))
+    if(localStorageLightTheme.getElements() != JSON.stringify(settings.settingsLightTheme)) {
+        changeTheme()
+    }
+
+    
 }
+
+
+
+// выполняется на главной странице
+// при открытии главной страницы из бд достается тема и язык пользователя
+if(document.querySelector('.checkbox__group')) {
+    // console.log(localStorageUser.getElements())
+    let userId = localStorageUser.getElements()
+    if(userId != 0) {
+        getDataAboutCheckBoxes(userId)
+        
+    } else {
+        // console.log(10110101010)
+        getCheckBoxesFromLocalStorage()
+    }
+}
+
+async function getDataAboutCheckBoxes(userId) {
+    let settings
+    let response = await fetch(`${requestURL}/settings/id=${userId}`)
+    settings = await response.json()
+    console.log(JSON.parse(settings.settingsCheckBoxes))
+    localStorage.setItem('checkBoxes', JSON.stringify(JSON.parse(settings.settingsCheckBoxes)))
+    localStorageTimePeriod.putElements(settings.settingsTimePeriod)
+   
+    getCheckBoxesFromLocalStorage()
+
+}
+
+function getCheckBoxesFromLocalStorage() {
+     //достаем id активных чекбоксов из local storage и меняем у соответсвенных чекбоксов свойство checked на true
+     let activeCheckBoxes = localStorageCheckBoxes.getElements()
+    //  console.log(checkBoxes)
+     if (activeCheckBoxes !== [] && checkBoxes.length !== 0) {
+         for (let i = 0; i < activeCheckBoxes.length; i++) {
+             let activeCheckBox = document.getElementById(activeCheckBoxes[i])
+             activeCheckBox.checked = true
+         }
+     }
+ 
+     console.log(document.getElementById(localStorageTimePeriod.getElements()))
+     // && document.getElementById(localStorageTimePeriod.getElements() !== null
+     if (localStorageTimePeriod.getElements() != '' && document.getElementById('dropdown__button') !== null) {
+         //достаем из localStorage данные о периоде времени
+         let storageTime = document.getElementById(localStorageTimePeriod.getElements())
+         //для найденного в памяти времени запускаем событие клик, чтобы изменить значения поля и переменной
+         show = false
+         storageTime.click()
+     }
+}
+
+
+
 
 
 
@@ -675,8 +791,25 @@ if (lightTheme === false) {
 }
 
 if (btnTheme) {
-    btnTheme.addEventListener('click', changeTheme)
+    btnTheme.addEventListener('click', changeThemeWithDB)
     // changeBtnThemeContent()
+}
+
+function changeThemeWithDB() {
+    changeTheme()
+    if(localStorageUser.getElements() != 0) {
+        let data = JSON.stringify({
+            settingsId: localStorageUser.getElements(),
+            settingsLight: localStorageLightTheme.getElements()
+        })
+        fetch(`${requestURL}/settings/theme`, {
+            method: 'PUT',
+            body: data,
+            headers: {
+                'Content-type': 'application/json; charset=utf-8'
+            },
+        })
+    }
 }
 
 function changeTheme() {

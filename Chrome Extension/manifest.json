@@ -14,6 +14,12 @@
           }
 
     },
+    "icons": {
+        "16": "/img/icon/icons8-broom-16.png",
+        "32": "/img/icon/icons8-broom-32.png",
+        "48": "/img/icon/icons8-broom-48.png",
+        "128": "/img/icon/icons8-broom-100.png"
+    },
     "permissions": [
         "history",
         "browsingData",
