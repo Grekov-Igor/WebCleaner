@@ -16,7 +16,7 @@ class settingsController {
 
     async updateLanguage(req, res) {
         const {settingsId, settingsEng} = req.body
-        console.log(settingsId, settingsEng)
+        // console.log(settingsId, settingsEng)
         const settings = await db.query(`update "Settings" set "settingsEngLang" = $1 where "settingsId" = $2 returning *`, [settingsEng, settingsId])
         res.json(settings.rows[0])
 

@@ -73,9 +73,9 @@ class LocalStorageUtil {
     delElemet(id) {
         let elements = this.getElements()
         elements.splice(id, 1)
-        for (let i = id; i < elements.length; i++) {
-            elements[i].number = elements[i].number - 1
-        }
+        // for (let i = id; i < elements.length; i++) {
+        //     elements[i].number = elements[i].number - 1
+        // }
         localStorage.setItem(this.keyName, JSON.stringify(elements))
         if (this.keyName === 'links') {
             chrome.storage.local.set({
@@ -187,14 +187,41 @@ if (buttonClear) {
 
 
 let whiteList = [] //массив для хранения белого списка
-whiteList = localStorageLinks.getElements()
-for (let i = 0; i < whiteList.length; i++) {
-    whiteList[i] = whiteList[i].link
+// for (let i = 0; i < whiteList.length; i++) {
+//     whiteList[i] = whiteList[i].link
+// }
+
+//обновление whiteList из бд
+async function whiteListWithDB() {
+    if(localStorageUser.getElements() != 0) {
+        let links
+        let response = await fetch(`${requestURL}/whiteList/id=${localStorageUser.getElements()}`)
+        // console.log(response)
+        try {
+            links = await response.json()
+        } catch(e) {
+            links=[]
+        }
+        console.log(links)
+        let arrLinks = []
+        if(links !== []) {
+            for(let i=0; i<links.length; i++) {
+                arrLinks.push(links[i].wlUrl)
+            }
+        }
+        console.log(arrLinks)
+        localStorage.setItem('links', JSON.stringify(arrLinks))
+    }
+
+    whiteList = localStorageLinks.getElements()
+    console.log(whiteList)
 }
-console.log(whiteList)
+
 //функция удаления данных в зависимости от выбранных вариантов
-function removeData() {
+async function removeData() {
     let checkBoxes = document.getElementsByClassName('check')
+    await whiteListWithDB()
+    console.log(whiteList)
     //let num = 0
     for (let i = 0; i < checkBoxes.length; i++) {
         if (checkBoxes[i].checked === true) {
@@ -592,15 +619,25 @@ let btnAddToWhite = document.getElementById('btnAddToWhite')
 if (btnAddToWhite) {
     btnAddToWhite.addEventListener('click', addToWhiteList)
 }
+
+async function printWhiteListWithDB() {
+    await whiteListWithDB()
+    
+    if (localStorageLinks.getElements().length !== 0) {
+        printWhiteList(localStorageLinks.getElements().length, localStorageLinks.getElements())
+    }
+}
+
 // загрузка списка из local storage
 
 let numberOfWhite = 0
 console.log(localStorageLinks.getElements().length)
 // console.log(document.querySelector('#listBlock_white'))
 if (document.querySelector('#listBlock_white')) {
-    if (localStorageLinks.getElements().length !== 0) {
-        printWhiteList(localStorageLinks.getElements().length, localStorageLinks.getElements())
-    }
+    // if (localStorageLinks.getElements().length !== 0) {
+    //     printWhiteList(localStorageLinks.getElements().length, localStorageLinks.getElements())
+    // }
+    printWhiteListWithDB()
 } else if (document.querySelector('#listBlock_black')) {
     if (localStorageBlackLinks.getElements().length !== 0) {
         printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())
@@ -623,17 +660,19 @@ function printWhiteList(nOW, linksS) {
     // links = localStorageLinks.getElements()
     numberOfWhite = nOW
     links = linksS
+    linksNumber = 0
     // console.log(links)
     for (let i = 0; i < numberOfWhite; i++) {
+        linksNumber++
         document.querySelector('.list__block').insertAdjacentHTML('beforeend',
             `
         <div class="block__item">
             <div class="block__text">
-                <div class="item__number">${links[i].number}</div>
-                <div class="item__link">${links[i].link}</div>
+                <div class="item__number">${linksNumber}</div>
+                <div class="item__link">${links[i]}</div>
             </div>
             
-            <a href="#" class="item__dots" id="btnDelete__${links[i].number}">
+            <a href="#" class="item__dots" id="btnDelete__${linksNumber}">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <rect width="20" height="20" fill="url(#pattern0)"/>
                 <defs>
@@ -650,7 +689,7 @@ function printWhiteList(nOW, linksS) {
         document.getElementsByClassName('empty__plug')[0].style.display = 'none'
 
         let btnDelete = document.getElementsByClassName('item__dots')
-        btnDelete[links[i].number - 1].addEventListener('click', deleteFromWhite) //добавление обработчика новой появившейся кнопке
+        btnDelete[linksNumber - 1].addEventListener('click', deleteFromWhite) //добавление обработчика новой появившейся кнопке
 
     }
 }
@@ -713,7 +752,21 @@ function addToWhiteList() {
         document.getElementById('input__area').value = ""
         // links.push(new LinkItem(numberOfWhite, link))
         if (document.querySelector('#listBlock_white')) {
-            localStorageLinks.putElements(new LinkItem(numberOfWhite, link))
+            // localStorageLinks.putElements(new LinkItem(numberOfWhite, link))
+            localStorageLinks.putElements(link)
+            if(localStorageUser.getElements()!=0) {
+                let data = JSON.stringify({
+                    wlUrl: link,
+                    userId: localStorageUser.getElements()
+                })
+                fetch(`${requestURL}/whiteList`, {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Content-type': 'application/json; charset=utf-8'
+                    },
+                })
+            }
         } else {
             localStorageBlackLinks.putElements(new LinkItem(numberOfWhite, link))
         }
@@ -745,6 +798,15 @@ function deleteFromWhite() {
     }
 
     if (document.querySelector('#listBlock_white')) {
+        if(localStorageUser.getElements()!=0) {
+            let urlLink = localStorageLinks.getElements()[id-1]
+            console.log(urlLink)
+            let enc = encodeURIComponent(urlLink)
+            console.log(`${requestURL}/whiteList/${localStorageUser.getElements()}&${enc}`)
+            fetch(`${requestURL}/whiteList/${localStorageUser.getElements()}&${enc}`, {
+                method: 'DELETE'
+            })
+        }
         localStorageLinks.delElemet(id - 1)
         if (localStorageLinks.getElements().length !== 0) {
             printWhiteList(localStorageLinks.getElements().length, localStorageLinks.getElements())
@@ -884,23 +946,26 @@ try {
 }
 // localStorageUser.putElements(JSON.stringify(userId))
 let headerButtons = document.getElementById("header__buttons")
-if(userId === 0) {
-    headerButtons.insertAdjacentHTML('afterbegin', `
-        <button class="button__logIn button" id="btnLogIn">
-            <div class="logIn__text">Войти</div>
-        </button>
-    `)
-    let btnLogIn = document.querySelector("#btnLogIn")
-    btnLogIn.addEventListener('click', goToAuth)
-
-
-} else {
-    headerButtons.insertAdjacentHTML('afterbegin', `
-        <img src="img/account.png" alt="" class="header__account" id="header__account">
-    `)
-    let btnAcc = document.querySelector("#header__account")
-    btnAcc.addEventListener('click', goToAcc)
+if(headerButtons) {
+    if(userId === 0) {
+        headerButtons.insertAdjacentHTML('afterbegin', `
+            <button class="button__logIn button" id="btnLogIn">
+                <div class="logIn__text">Войти</div>
+            </button>
+        `)
+        let btnLogIn = document.querySelector("#btnLogIn")
+        btnLogIn.addEventListener('click', goToAuth)
+    
+    
+    } else {
+        headerButtons.insertAdjacentHTML('afterbegin', `
+            <img src="img/account.png" alt="" class="header__account" id="header__account">
+        `)
+        let btnAcc = document.querySelector("#header__account")
+        btnAcc.addEventListener('click', goToAcc)
+    }
 }
+
 
 function goToAcc() {
     // chrome.runtime.openOptionsPage()
@@ -949,6 +1014,10 @@ function goToAcc() {
 // chrome.storage.local.set({
 //     userId: JSON.stringify(0)
 // })
+
+// let url = "https://www.figma.com/"
+// let enc = encodeURIComponent(url)
+// console.log(enc)
 
 
 
