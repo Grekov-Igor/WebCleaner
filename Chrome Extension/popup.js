@@ -66,7 +66,10 @@ class LocalStorageUtil {
                 })
             }
         } else  if (this.keyName === 'userId') {
-            localStorage.setItem(this.keyName, id)
+            localStorage.setItem(this.keyName, JSON.stringify(id))
+            chrome.storage.local.set({
+                userId: JSON.stringify(id)
+            })
         }
     }
 
@@ -211,10 +214,43 @@ async function whiteListWithDB() {
         }
         console.log(arrLinks)
         localStorage.setItem('links', JSON.stringify(arrLinks))
+        chrome.storage.local.set({
+            links: JSON.stringify(elements)
+        })
+
     }
 
     whiteList = localStorageLinks.getElements()
     console.log(whiteList)
+}
+
+
+async function blackListWithDB() {
+    if(localStorageUser.getElements() != 0) {
+        let links
+        let response = await fetch(`${requestURL}/blackList/id=${localStorageUser.getElements()}`)
+        // console.log(response)
+        try {
+            links = await response.json()
+        } catch(e) {
+            links=[]
+        }
+        console.log(links)
+        let arrLinks = []
+        if(links !== []) {
+            for(let i=0; i<links.length; i++) {
+                arrLinks.push(links[i].blUrl)
+            }
+        }
+        console.log(arrLinks)
+        localStorage.setItem('blackLinks', JSON.stringify(arrLinks))
+        chrome.storage.local.set({
+            blackLinks: JSON.stringify(arrLinks)
+        })
+    }
+
+    // whiteList = localStorageLinks.getElements()
+    // console.log(whiteList)
 }
 
 //функция удаления данных в зависимости от выбранных вариантов
@@ -628,6 +664,14 @@ async function printWhiteListWithDB() {
     }
 }
 
+async function printBlackListWithDB() {
+    await blackListWithDB()
+    
+    if (localStorageBlackLinks.getElements().length !== 0) {
+        printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())
+    }
+}
+
 // загрузка списка из local storage
 
 let numberOfWhite = 0
@@ -639,9 +683,10 @@ if (document.querySelector('#listBlock_white')) {
     // }
     printWhiteListWithDB()
 } else if (document.querySelector('#listBlock_black')) {
-    if (localStorageBlackLinks.getElements().length !== 0) {
-        printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())
-    }
+    // if (localStorageBlackLinks.getElements().length !== 0) {
+    //     printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())
+    // }
+    printBlackListWithDB()
 }
 
 // if (localStorageLinks.getElements().length !== 0 && document.querySelector('.list__block')) {
@@ -768,7 +813,20 @@ function addToWhiteList() {
                 })
             }
         } else {
-            localStorageBlackLinks.putElements(new LinkItem(numberOfWhite, link))
+            localStorageBlackLinks.putElements(link)
+            if(localStorageUser.getElements()!=0) {
+                let data = JSON.stringify({
+                    blUrl: link,
+                    userId: localStorageUser.getElements()
+                })
+                fetch(`${requestURL}/blackList`, {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Content-type': 'application/json; charset=utf-8'
+                    },
+                })
+            }
         }
         // localStorageLinks.putElements(new LinkItem(numberOfWhite, link))
 
@@ -815,6 +873,15 @@ function deleteFromWhite() {
         }
         numberOfWhite = localStorageLinks.getElements().length
     } else {
+        if(localStorageUser.getElements()!=0) {
+            let urlLink = localStorageBlackLinks.getElements()[id-1]
+            console.log(urlLink)
+            let enc = encodeURIComponent(urlLink)
+            console.log(`${requestURL}/blackList/${localStorageUser.getElements()}&${enc}`)
+            fetch(`${requestURL}/blackList/${localStorageUser.getElements()}&${enc}`, {
+                method: 'DELETE'
+            })
+        }
         localStorageBlackLinks.delElemet(id - 1)
         if (localStorageBlackLinks.getElements().length !== 0) {
             printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())

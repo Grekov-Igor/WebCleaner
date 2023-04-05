@@ -39,6 +39,9 @@ async function authorization() {
         //     userId: JSON.stringify(user.userId)
         // })
         localStorage.setItem('userId', JSON.stringify(user.userId))
+        chrome.storage.local.set({
+            userId: JSON.stringify(user.userId)
+        })
         // chrome.runtime.openOptionsPage()
         window.location.href = "account.html";
 
@@ -149,6 +152,9 @@ if(logOutBtn) {
 
 function exit() {
     localStorage.setItem('userId', 0)
+    chrome.storage.local.set({
+        userId: 0
+    })
     window.close()
     // chrome.runtime.openOptionsPage()
 
