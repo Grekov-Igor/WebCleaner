@@ -215,7 +215,7 @@ async function whiteListWithDB() {
         console.log(arrLinks)
         localStorage.setItem('links', JSON.stringify(arrLinks))
         chrome.storage.local.set({
-            links: JSON.stringify(elements)
+            links: JSON.stringify(arrLinks)
         })
 
     }
