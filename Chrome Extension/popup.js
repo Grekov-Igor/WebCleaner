@@ -1087,6 +1087,19 @@ function goToAcc() {
 // console.log(enc)
 
 
+// console.log((fetch(`${requestURL}/deletedSite/id=${1}`)).json())
+
+async function t() {
+    let response = await fetch(`${requestURL}/deletedSite/id=${1}`)
+    let sites = await response.json()
+    console.log(sites)
+    
+
+}
+
+t()
+
+
 
 //получение url текущей страницы и обрезание лишнего
 let tabs //хранит полный url
