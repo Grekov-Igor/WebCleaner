@@ -5,7 +5,7 @@
 //     console.log(JSON.parse(xhr.response))
 // }
 // xhr.send()
-const requestURL = 'http://localhost:4444/api/user'
+const requestURL = 'http://localhost:4444/api'
 // const xhr = new XMLHttpRequest()
 
 let btnAuth = document.querySelector('#btnAuth')
@@ -28,7 +28,7 @@ async function authorization() {
     let user
     
     
-    let response = await fetch(`${requestURL}/login=${login}`)
+    let response = await fetch(`${requestURL}/user/login=${login}`)
     console.log(response)
     user = await response.json()
 
@@ -79,7 +79,7 @@ async function registration() {
 
     let user
     
-    let response = await fetch(`${requestURL}/login=${login}`)
+    let response = await fetch(`${requestURL}/user/login=${login}`)
     // console.log(response)
     try {
         user = await response.json()
@@ -101,7 +101,7 @@ async function registration() {
     })
 
     
-    await fetch(requestURL, {
+    await fetch(`${requestURL}/user`, {
         method: 'POST',
         body: data,
         headers: {
@@ -136,7 +136,7 @@ if(checkAccPage) {
 //функция для загрузки данных на страницу аккаунта
 async function getUserData(userId) {
     // console.log(userId)
-    let response = await fetch(`${requestURL}/id=${userId}`)
+    let response = await fetch(`${requestURL}/user/id=${userId}`)
     let user = await response.json()
     let name = user.userSurname + " " + user.userName
     document.querySelector('#profileBlock__name').textContent = name    
@@ -159,3 +159,106 @@ function exit() {
     // chrome.runtime.openOptionsPage()
 
 }
+
+// реализация функционала журнала
+
+// функция получения уникальных дат из бд
+let sitesForPrintJournal
+async function getUniqDates() {
+    let response = await fetch(`${requestURL}/deletedSite/id=${localStorage.getItem('userId')}`) //получаю сайты пользователя
+    let sites = await response.json()
+    // console.log(sites)
+    let arrUniqDates = []
+    // sitesForPrintJournal = sites
+    
+    // console.log(new Date(new Date(sites[0].dsDate).toDateString()), new Date(new Date(sites[1].dsDate).toDateString()))
+    // console.log(new Date(new Date(sites[0].dsDate).toDateString()) === new Date(new Date(sites[0].dsDate).toDateString()))
+    if(sites.length!==0) {
+        for(let i=0; i<sites.length; i++) {
+        
+            let date = new Date(sites[i].dsDate)
+            // date = new Date(date.toDateString())
+            // date = date.toISOString().split('T')[0]
+            const dateCopy = new Date(date);
+            dateCopy.setTime(dateCopy.getTime() - dateCopy.getTimezoneOffset()*60*1000);
+            date = dateCopy.toISOString().split('T')[0]
+            // console.log(date)
+    
+            if(arrUniqDates.indexOf(date) === -1) {
+                arrUniqDates.push(date)
+                // console.log(arrUniqDates.indexOf(date))
+    
+            }
+            // console.log(date)
+        }
+    }
+    
+    // console.log(arrUniqDates)
+    return arrUniqDates
+}
+
+async function printJournal() {
+    let arrUniqDates = await getUniqDates()
+    // console.log(arrUniqDates.sort().reverse()) 
+    if(arrUniqDates.length===0) {
+        return
+    }
+    document.querySelector(".journalBlockEmpty").style.display = 'none'
+    console.log(arrUniqDates)
+    arrUniqDates.sort().reverse() //получаем массив с датами по убыванию
+    
+    let blockNum = 0
+    for(let i=0; i<arrUniqDates.length; i++) {
+        console.log(new Date(new Date(arrUniqDates[i]).toDateString()))
+        let date = new Date(new Date(arrUniqDates[i]).toDateString()).toISOString()
+        let response = await fetch(`${requestURL}/deletedSite/${localStorage.getItem('userId')}&${date}`) //получаю сайты пользователя
+        let sites = await response.json()
+        console.log(sites)
+        let day = 
+        document.querySelector('.main__journal').insertAdjacentHTML('beforeend',
+        `
+        <div class="journalBlock">              
+            <div class="journal__date">${new Date(new Date(arrUniqDates[i]).toDateString()).toLocaleDateString()}</div>
+            <div class="journal__data">
+                
+            </div>
+        </div>
+        `)
+
+        // console.log(document.getElementsByClassName("journalBlock")[document.getElementsByClassName("journalBlock").length-1])
+
+        for (let j=0; j<sites.length; j++) {
+            let journalBlocks = document.getElementsByClassName("journal__data")
+            journalBlocks[journalBlocks.length-1].insertAdjacentHTML('afterbegin', 
+            `
+            <div class="journal__item" >
+                <div class="jItem__info">
+                    <div class="jItem__time">${new Date(sites[j].dsDate).toLocaleTimeString().substring(0, 5)}</div>
+                    <a href="${sites[j].dsUrl}" class="jItem__title">${sites[j].dsTitle}</a>
+                </div>
+                
+                <div href="" class="item__dots" id="btnDel__${sites[j].dsId}">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <rect width="20" height="20" fill="url(#pattern0)"/>
+                        <defs>
+                        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                        <use xlink:href="#image0_198_4" transform="scale(0.01)"/>
+                        </pattern>
+                        <image id="image0_198_4" width="100" height="100" xlink:href="data:image/png;base64,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"/>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+            `)
+            
+        }
+        
+    }
+    
+}
+
+if(document.querySelector(".journalBlock")) {
+    printJournal()
+}
+
+
