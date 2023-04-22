@@ -234,7 +234,7 @@ async function printJournal() {
             <div class="journal__item" >
                 <div class="jItem__info">
                     <div class="jItem__time">${new Date(sites[j].dsDate).toLocaleTimeString().substring(0, 5)}</div>
-                    <a href="${sites[j].dsUrl}" class="jItem__title">${sites[j].dsTitle}</a>
+                    <a href="${sites[j].dsUrl}" target="_blank" class="jItem__title">${sites[j].dsTitle}</a>
                 </div>
                 
                 <div href="" class="item__dots" id="btnDel__${sites[j].dsId}">
@@ -250,6 +250,9 @@ async function printJournal() {
                 </div>
             </div>
             `)
+
+            document.getElementById(`btnDel__${sites[j].dsId}`).addEventListener('click', deleteFromJournal)
+
             
         }
         
@@ -261,4 +264,55 @@ if(document.querySelector(".journalBlock")) {
     printJournal()
 }
 
+
+// реализация удаления элемента из журнала
+async function deleteFromJournal() {
+    let id = this.id
+    id = id.slice(8)
+    // console.log(id)
+    let journalItem = document.getElementById(`btnDel__${id}`).parentNode
+    
+    fetch(`${requestURL}/deletedSite/id=${id}`, {
+        method: 'DELETE'
+    })
+
+    // если удалили последний элемент за день, удаляем блок дня
+    let journalData = journalItem.parentNode
+    journalItem.remove()
+    // console.log(journalData.childElementCount)
+    if(journalData.childElementCount===0) {
+        journalData.parentNode.remove()
+    }
+
+    // если последний элемент за все время, то показываем заглушку пустоты
+    if(!document.querySelector(".journal__item")) {
+        document.querySelector(".journalBlockEmpty").style.display = 'flex'
+    }
+    
+}
+
+// реализация полной очистки журнала
+
+let clrJournalBtn = document.querySelector("#clrJournalBtn")
+if(clrJournalBtn) {
+    clrJournalBtn.addEventListener('click', clearJournal)
+}
+
+async function clearJournal() {
+    if(!document.querySelector(".journal__item")) {
+        alert("Журнал уже пустой!")
+        return
+    }
+
+    let journalBlocks = document.getElementsByClassName('journalBlock')
+    // console.log(journalBlocks)
+    for(let i =1; i<journalBlocks.length; i++) {
+        journalBlocks[i].remove()
+    }
+    document.querySelector(".journalBlockEmpty").style.display = 'flex'
+
+    fetch(`${requestURL}/deletedSite/userId=${localStorage.getItem('userId')}`, {
+        method: 'DELETE'
+    })
+}
 
