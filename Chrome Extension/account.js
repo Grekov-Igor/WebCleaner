@@ -316,3 +316,20 @@ async function clearJournal() {
     })
 }
 
+
+// реализация экспорта журнала в .xlsx
+
+let exportXLSXbtn = document.querySelector("#exportBtn")
+if(exportXLSXbtn) {
+    exportXLSXbtn.addEventListener('click', exportXLSX)
+}
+
+function exportXLSX() {
+    if(!document.querySelector(".journal__item")) {
+        alert("Журнал пустой!")
+        return
+    }
+
+    window.open(`${requestURL}/deletedSite/export/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
+    
+}

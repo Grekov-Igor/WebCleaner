@@ -925,6 +925,9 @@ body {
     background: #448CF2;
     border-radius: 42px;
     margin-right: 10px;
+
+    display: flex;
+    align-items: center;
 }
 
 .jItem__info {

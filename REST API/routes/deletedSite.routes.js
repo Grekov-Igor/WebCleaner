@@ -8,6 +8,6 @@ router.get('/deletedSite/id=:id', deletedSiteCotroller.getUserDeletedSites)
 router.get('/deletedSite/:id&:date', deletedSiteCotroller.getUserDeletedSitesForDate)
 router.delete('/deletedSite/id=:id', deletedSiteCotroller.deleteSite)
 router.delete('/deletedSite/userId=:userId', deletedSiteCotroller.deleteUserSites)
-
+router.get('/deletedSite/export/:id&:timeZoneOffset', deletedSiteCotroller.exportSitesXLSX)
 
 module.exports = router
