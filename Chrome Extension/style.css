@@ -799,7 +799,7 @@ body {
     line-height: 35px;
 
     color: #2F2F2F;
-    margin-left: 30px;
+    margin: 0 0 15px 30px;
 }
 
 .journal__buttons {
@@ -812,9 +812,13 @@ body {
 
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
     padding-right: 30px;
     margin-bottom: 7px;
+}
+
+.journal__exportBtn {
+    padding-left: 30px;
 }
 
 .exportBtn {

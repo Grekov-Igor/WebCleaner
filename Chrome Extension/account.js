@@ -319,7 +319,7 @@ async function clearJournal() {
 
 // реализация экспорта журнала в .xlsx
 
-let exportXLSXbtn = document.querySelector("#exportBtn")
+let exportXLSXbtn = document.querySelector("#exportXLSXbtn")
 if(exportXLSXbtn) {
     exportXLSXbtn.addEventListener('click', exportXLSX)
 }
@@ -330,6 +330,23 @@ function exportXLSX() {
         return
     }
 
-    window.open(`${requestURL}/deletedSite/export/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
+    window.open(`${requestURL}/deletedSite/exportXLSX/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
+    
+}
+
+// реализация экспорта журнала в .xlsx
+
+let exportCSVbtn = document.querySelector("#exportCSVbtn")
+if(exportCSVbtn) {
+    exportCSVbtn.addEventListener('click', exportCSV)
+}
+
+function exportCSV() {
+    if(!document.querySelector(".journal__item")) {
+        alert("Журнал пустой!")
+        return
+    }
+
+    window.open(`${requestURL}/deletedSite/exportCSV/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
     
 }
