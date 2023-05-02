@@ -8,6 +8,14 @@
 const requestURL = 'http://localhost:4444/api'
 // const xhr = new XMLHttpRequest()
 
+
+// реализация темы
+let lightTheme = JSON.parse(localStorage.getItem('lightTheme'))
+if(lightTheme === false) {
+    document.body.classList.toggle('dark-theme')
+}
+
+
 let btnAuth = document.querySelector('#btnAuth')
 // console.log(btnAuth)
 if (btnAuth) {
@@ -108,6 +116,11 @@ async function registration() {
             'Content-type': 'application/json; charset=utf-8'
         },
     })
+
+    // реализация отправки всех гостевых настроек в аккаунт нового пользователя
+
+
+
     console.log("Успех")
 }
 

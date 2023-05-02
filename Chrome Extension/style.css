@@ -611,12 +611,15 @@ body {
 
 /* ============================== */
 .main-fullpage {
+    flex-grow: 3;
     height: 100%;
+    display: flex;
+    align-items: center;
 }
 .main-fullpage__container {
     justify-content: center;
     height: 100%;
- 
+    
     align-items: center;
 }
 
@@ -706,7 +709,7 @@ body {
 
 .authBlock-reg {
     padding: 23px;
-    margin-top: 18px;
+    /* margin-top: 18px; */
 }
 
 .nameBlock {
@@ -1009,4 +1012,54 @@ body.dark-theme .settingsBody__btn {
 
 body.dark-theme .btn__title {
     color: #FFFFFF;
+}
+
+/* fullpage */
+
+body.dark-theme .wrapper-fullpage {
+    background-color: #0D1319;
+}
+
+body.dark-theme .authBlock {
+    background-color: #19232F;
+}
+
+body.dark-theme .authBlock__title {
+    color: #fff;
+}
+
+body.dark-theme .reg__text {
+    color: #fff;
+}
+
+body.dark-theme .profileBlock {
+    background-color: #19232F;
+}
+
+body.dark-theme .profileBlock__name {
+    color: #FFFFFF;
+}
+
+body.dark-theme .journal__title {
+    color: #FFFFFF;
+}
+
+body.dark-theme .journalBlock {
+    background-color: #19232F;
+}
+
+body.dark-theme .journal__date {
+    color: #FFFFFF;
+}
+
+body.dark-theme .journal__item {
+    background-color: #203040;
+}
+
+body.dark-theme .jItem__title {
+    color: #FFFFFF;
+}
+
+body.dark-theme .journal__date::after {
+    background-color: #203040;
 }
