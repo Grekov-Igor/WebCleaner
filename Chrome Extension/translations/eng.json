@@ -46,5 +46,30 @@
         "dark": "Dark",
         "light": "Light"
     },
-    "placeholder": "For example: https://www.google.ru/"
+    "placeholder": "For example: https://www.google.ru/",
+    "pbTitle": "User",
+    "journalTitle": "Journal",
+    "exportXLSXbtn": "Exporting the journal to .xlsx",
+    "exportCSVbtn": "Exporting the journal to .csv",
+    "clrJournalBtn": "Clearing the journal",
+    "emptyJournal": "The journal is empty.<br>You haven't set up a blacklist yet.",
+    "logIn": "Log In",
+    "authBlock": "Authorization",
+    "inputBlockLogin": "Enter your login",
+    "inputBlockPassword": "Enter your password",
+    "regText": "No account?",
+    "regBtn": "Register",
+    "inputLog": "Your login",
+    "inputPas": "Your password",
+    "regBlock": "Registration",
+    "nameBlock": "Enter a name",
+    "surnameBlcok": "Enter a surname",
+    "repeatPas": "Enter the password again",
+    "haveAcc": "Have an account?",
+    "inputName": "Name",
+    "inputSurname": "Surname",
+    "inputLogin": "Login",
+    "inputPassword": "Password",
+    "inputRepPas": "Repeat password"
+
 }

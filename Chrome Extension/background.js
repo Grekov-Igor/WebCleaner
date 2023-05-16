@@ -4,11 +4,20 @@ chrome.runtime.onMessage.addListener(
     async function(request) {
         if (request.greeting === "autoDelete") {
             let sites
-            let resultUser = await chrome.storage.local.get(["userId"])
-            // console.log(result.userId)
-            if(resultUser.userId !=0) {
+            let resultJWT = await chrome.storage.local.get(["jwt"])
+            // resultJWT = JSON.parse(resultJWT)
+            // let resultUser = await chrome.storage.local.get(["userId"])
+            console.log(JSON.parse(resultJWT.jwt))
+            resultJWT = JSON.parse(resultJWT.jwt)
+            if(resultJWT !=0) {
                 let links
-                let response = await fetch(`${requestURL}/blackList/id=${resultUser.userId}`)
+                // let response = await fetch(`${requestURL}/blackList/id=${resultUser.userId}`)
+                let response = await fetch(`${requestURL}/blackList/id`, {
+                    method: 'GET',  
+                    headers: {  
+                        'Authorization': `Bearer ${resultJWT}`
+                    },
+                })
                 // console.log(response)
                 try {
                     links = await response.json()
@@ -41,12 +50,12 @@ chrome.runtime.onMessage.addListener(
                             if (page.url.indexOf(sites[i]) != -1) {
                                 // console.log(page.title + " " + new Date(+page.lastVisitTime))
                                 // sites.push(page.url)
-                                if(resultUser.userId != 0) {
+                                if(resultJWT != 0) {
                                     // console.log(resultUser.userId)
                                     let data = JSON.stringify({
                                         dsUrl: page.url,
                                         dsDate: new Date(+page.lastVisitTime),
-                                        userId: resultUser.userId,
+                                       
                                         dsTitle: page.title
                                     })
                                     // console.log(data)
@@ -54,7 +63,8 @@ chrome.runtime.onMessage.addListener(
                                         method: 'POST',
                                         body: data,
                                         headers: {
-                                            'Content-type': 'application/json; charset=utf-8'
+                                            'Content-type': 'application/json; charset=utf-8',
+                                            'Authorization': `Bearer ${resultJWT}`
                                         },
                                     })
                                 }

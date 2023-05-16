@@ -46,5 +46,30 @@
         "dark": "Темная",
         "light": "Светлая"
     },
-    "placeholder": "Например: https://www.google.ru/"
+    "placeholder": "Например: https://www.google.ru/",
+    "pbTitle": "Пользователь",
+    "journalTitle": "Журнал",
+    "exportXLSXbtn": "Экспорт журнала в .xlsx",
+    "exportCSVbtn": "Экспорт журнала в .csv",
+    "clrJournalBtn": "Очистка журнала",
+    "emptyJournal": "Журнал пуст.<br>Вы пока не настроили черный список.",
+    "logIn": "Войти",
+    "authBlock": "Авторизация",
+    "inputBlockLogin": "Введите логин",
+    "inputBlockPassword": "Введите пароль",
+    "regText": "Нет аккаунта?",
+    "regBtn": "Зарегистрироваться",
+    "inputLog": "Ваш логин",
+    "inputPas": "Ваш пароль",
+    "regBlock": "Регистрация",
+    "nameBlock": "Введите имя",
+    "surnameBlcok": "Введите фамилию",
+    "repeatPas": "Введите пароль еще раз",
+    "haveAcc": "Есть аккаунт?",
+    "inputName": "Имя",
+    "inputSurname": "Фамилия",
+    "inputLogin": "Логин",
+    "inputPassword": "Пароль",
+    "inputRepPas": "Повтор пароля"
+
 }

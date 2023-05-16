@@ -112,16 +112,17 @@ if (btnLanguage) {
 function changeLanguageWithDB() {
 
     changeLanguage()
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         let data = JSON.stringify({
-            settingsId: localStorageUser.getElements(),
             settingsEng: localStorageLanguage.getElements()
         })
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
         fetch(`${requestURL}/settings/lang`, {
             method: 'PUT',
             body: data,
             headers: {
-                'Content-type': 'application/json; charset=utf-8'
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${jwt}`
             },
         })
     }
@@ -196,9 +197,15 @@ let whiteList = [] //массив для хранения белого спис�
 
 //обновление whiteList из бд
 async function whiteListWithDB() {
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         let links
-        let response = await fetch(`${requestURL}/whiteList/id=${localStorageUser.getElements()}`)
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
+        let response = await fetch(`${requestURL}/whiteList/id`, {
+            method: 'GET',  
+            headers: {  
+                'Authorization': `Bearer ${jwt}`
+            },
+        })
         // console.log(response)
         try {
             links = await response.json()
@@ -226,9 +233,15 @@ async function whiteListWithDB() {
 
 
 async function blackListWithDB() {
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         let links
-        let response = await fetch(`${requestURL}/blackList/id=${localStorageUser.getElements()}`)
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
+        let response = await fetch(`${requestURL}/blackList/id`, {
+            method: 'GET',  
+            headers: {  
+                'Authorization': `Bearer ${jwt}`
+            },
+        })
         // console.log(response)
         try {
             links = await response.json()
@@ -442,18 +455,19 @@ function chooseTimePeriod() {
 
     localStorageTimePeriod.putElements(id)
 
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         // console.log(localStorageTimePeriod.getElements())
         let data = JSON.stringify({
-            settingsId: localStorageUser.getElements(),
+            
             settingsTimePeriod: localStorageTimePeriod.getElements()
         })
-
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
         fetch(`${requestURL}/settings/timePeriod`, {
             method: 'PUT',
             body: data,
             headers: {
-                'Content-type': 'application/json; charset=utf-8'
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${jwt}`
             },
         })
     }
@@ -523,18 +537,19 @@ function deleteOnThisPage() {
 function checkBoxToStorage() {
     localStorageCheckBoxes.putElements(this.id)
 
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         // console.log(localStorageCheckBoxes.getElements())
         let data = JSON.stringify({
-            settingsId: localStorageUser.getElements(),
             settingsCheckBoxes: JSON.stringify(localStorageCheckBoxes.getElements())
         })
         // console.log(data)
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
         fetch(`${requestURL}/settings/checkBoxes`, {
             method: 'PUT',
             body: data,
             headers: {
-                'Content-type': 'application/json; charset=utf-8'
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${jwt}`
             },
         })
     }
@@ -549,16 +564,22 @@ for (let i = 0; i < checkBoxes.length; i++) {
 // при открытии главной страницы из бд достается тема и язык пользователя
 if(document.querySelector('.main__buttonGroup')) {
     // console.log(localStorageUser.getElements())
-    let userId = localStorageUser.getElements()
-    if(userId != 0) {
+    
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         
-        getDataAboutThemeAndLang(userId)
+        getDataAboutThemeAndLang()
     }
 }
 
-async function getDataAboutThemeAndLang(userId) {
+async function getDataAboutThemeAndLang() {
     let settings
-    let response = await fetch(`${requestURL}/settings/id=${userId}`)
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/settings/id`, {
+        method: 'GET',
+        headers: {  
+            'Authorization': `Bearer ${jwt}`
+        },
+    })
     settings = await response.json()
     console.log(settings)
     if(localStorageLanguage.getElements() != JSON.stringify(settings.settingsEngLang)) {
@@ -581,9 +602,9 @@ async function getDataAboutThemeAndLang(userId) {
 // при открытии главной страницы из бд достается тема и язык пользователя
 if(document.querySelector('.checkbox__group')) {
     // console.log(localStorageUser.getElements())
-    let userId = localStorageUser.getElements()
-    if(userId != 0) {
-        getDataAboutCheckBoxes(userId)
+    
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
+        getDataAboutCheckBoxes()
         
     } else {
         // console.log(10110101010)
@@ -591,9 +612,15 @@ if(document.querySelector('.checkbox__group')) {
     }
 }
 
-async function getDataAboutCheckBoxes(userId) {
+async function getDataAboutCheckBoxes() {
     let settings
-    let response = await fetch(`${requestURL}/settings/id=${userId}`)
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/settings/id`, {
+        method: 'GET',
+        headers: {  
+            'Authorization': `Bearer ${jwt}`
+        },
+    })
     settings = await response.json()
     console.log(JSON.parse(settings.settingsCheckBoxes))
     localStorage.setItem('checkBoxes', JSON.stringify(JSON.parse(settings.settingsCheckBoxes)))
@@ -799,31 +826,35 @@ function addToWhiteList() {
         if (document.querySelector('#listBlock_white')) {
             // localStorageLinks.putElements(new LinkItem(numberOfWhite, link))
             localStorageLinks.putElements(link)
-            if(localStorageUser.getElements()!=0) {
+            if(JSON.parse(localStorage.getItem('jwt'))!=0) {
                 let data = JSON.stringify({
                     wlUrl: link,
-                    userId: localStorageUser.getElements()
+                    
                 })
+                let jwt = JSON.parse(localStorage.getItem('jwt'))
                 fetch(`${requestURL}/whiteList`, {
                     method: 'POST',
                     body: data,
                     headers: {
-                        'Content-type': 'application/json; charset=utf-8'
+                        'Content-type': 'application/json; charset=utf-8',
+                        'Authorization': `Bearer ${jwt}`
                     },
                 })
             }
         } else {
             localStorageBlackLinks.putElements(link)
-            if(localStorageUser.getElements()!=0) {
+            if(JSON.parse(localStorage.getItem('jwt'))!=0) {
                 let data = JSON.stringify({
                     blUrl: link,
-                    userId: localStorageUser.getElements()
+
                 })
+                let jwt = JSON.parse(localStorage.getItem('jwt'))
                 fetch(`${requestURL}/blackList`, {
                     method: 'POST',
                     body: data,
                     headers: {
-                        'Content-type': 'application/json; charset=utf-8'
+                        'Content-type': 'application/json; charset=utf-8',
+                        'Authorization': `Bearer ${jwt}`
                     },
                 })
             }
@@ -856,13 +887,17 @@ function deleteFromWhite() {
     }
 
     if (document.querySelector('#listBlock_white')) {
-        if(localStorageUser.getElements()!=0) {
+        if(JSON.parse(localStorage.getItem('jwt'))!=0) {
             let urlLink = localStorageLinks.getElements()[id-1]
             console.log(urlLink)
             let enc = encodeURIComponent(urlLink)
             console.log(`${requestURL}/whiteList/${localStorageUser.getElements()}&${enc}`)
-            fetch(`${requestURL}/whiteList/${localStorageUser.getElements()}&${enc}`, {
-                method: 'DELETE'
+            let jwt = JSON.parse(localStorage.getItem('jwt'))
+            fetch(`${requestURL}/whiteList/${enc}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwt}`
+                }
             })
         }
         localStorageLinks.delElemet(id - 1)
@@ -873,13 +908,18 @@ function deleteFromWhite() {
         }
         numberOfWhite = localStorageLinks.getElements().length
     } else {
-        if(localStorageUser.getElements()!=0) {
+        if(JSON.parse(localStorage.getItem('jwt'))!=0) {
             let urlLink = localStorageBlackLinks.getElements()[id-1]
             console.log(urlLink)
             let enc = encodeURIComponent(urlLink)
             console.log(`${requestURL}/blackList/${localStorageUser.getElements()}&${enc}`)
-            fetch(`${requestURL}/blackList/${localStorageUser.getElements()}&${enc}`, {
-                method: 'DELETE'
+            
+            let jwt = JSON.parse(localStorage.getItem('jwt'))
+            fetch(`${requestURL}/blackList/${enc}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwt}`
+                }
             })
         }
         localStorageBlackLinks.delElemet(id - 1)
@@ -926,16 +966,17 @@ if (btnTheme) {
 
 function changeThemeWithDB() {
     changeTheme()
-    if(localStorageUser.getElements() != 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) != 0) {
         let data = JSON.stringify({
-            settingsId: localStorageUser.getElements(),
             settingsLight: localStorageLightTheme.getElements()
         })
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
         fetch(`${requestURL}/settings/theme`, {
             method: 'PUT',
             body: data,
             headers: {
-                'Content-type': 'application/json; charset=utf-8'
+                'Content-type': 'application/json; charset=utf-8',
+                'Authorization': `Bearer ${jwt}`
             },
         })
     }
@@ -1000,10 +1041,11 @@ function goToAuth() {
 // получаем id пользователя, если не авторизован - оставляем кнопку войти, 
 // если авторизован, то меняем на кнопку аккаунта
 let userId
-let result = localStorageUser.getElements()
+let result = localStorage.getItem('jwt')
 try {
     // при выходе из аккаунта userID = 0
     userId = JSON.parse(result)
+    
     
     // console.log(userId)
 } catch(error) {
@@ -1014,10 +1056,10 @@ try {
 // localStorageUser.putElements(JSON.stringify(userId))
 let headerButtons = document.getElementById("header__buttons")
 if(headerButtons) {
-    if(userId === 0) {
+    if(JSON.parse(localStorage.getItem('jwt')) === 0) {
         headerButtons.insertAdjacentHTML('afterbegin', `
             <button class="button__logIn button" id="btnLogIn">
-                <div class="logIn__text">Войти</div>
+                <div class="logIn__text lng-logIn">Войти</div>
             </button>
         `)
         let btnLogIn = document.querySelector("#btnLogIn")

@@ -1,9 +1,10 @@
 const Router = require("express")
 const router = new Router()
 const whiteListCotroller = require("../controller/whiteList.controller")
+const checkAuth = require("../utils/checkAuth")
 
-router.post('/whiteList', whiteListCotroller.createListItem)
-router.get('/whiteList/id=:id', whiteListCotroller.getUserItems)
-router.delete('/whiteList/:id&:url', whiteListCotroller.deleteListItem)
+router.post('/whiteList', checkAuth, whiteListCotroller.createListItem)
+router.get('/whiteList/id', checkAuth, whiteListCotroller.getUserItems)
+router.delete('/whiteList/:url', checkAuth, whiteListCotroller.deleteListItem)
 
 module.exports = router

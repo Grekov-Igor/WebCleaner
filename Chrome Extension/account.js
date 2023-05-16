@@ -33,32 +33,61 @@ async function authorization() {
         return
     }
 
-    let user
     
     
-    let response = await fetch(`${requestURL}/user/login=${login}`)
-    console.log(response)
-    user = await response.json()
 
-    if(user == "") {
+    let data = JSON.stringify({
+        userLogin: login,
+        userPassword: password
+    })
+
+    
+    let response = await fetch(`${requestURL}/user/logIn`, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-type': 'application/json; charset=utf-8'
+        },
+    })
+    if(response.status !==200) {
         alert("Пользователя с такими данными нет")
-    } else if(user.userPassword === password) {
-        // chrome.storage.local.set({
-        //     userId: JSON.stringify(user.userId)
-        // })
-        localStorage.setItem('userId', JSON.stringify(user.userId))
-        chrome.storage.local.set({
-            userId: JSON.stringify(user.userId)
-        })
-        // chrome.runtime.openOptionsPage()
-        window.location.href = "account.html";
-
-
-
-        // alert(user.userId)
-    } else {
-        alert("Пользователя с такими данными нет")
+        return
     }
+
+    let resp = await response.json()
+    // console.log(resp.token)
+    localStorage.setItem('jwt', JSON.stringify(resp.token))
+    chrome.storage.local.set({
+        jwt: JSON.stringify(resp.token)
+    })
+    window.location.href = "account.html";
+
+    // let user
+    
+    
+    // let response = await fetch(`${requestURL}/user/login=${login}`)
+    // console.log(response)
+    // user = await response.json()
+
+    // if(user == "") {
+    //     alert("Пользователя с такими данными нет")
+    // } else if(user.userPassword === password) {
+    //     // chrome.storage.local.set({
+    //     //     userId: JSON.stringify(user.userId)
+    //     // })
+    //     localStorage.setItem('userId', JSON.stringify(user.userId))
+    //     chrome.storage.local.set({
+    //         userId: JSON.stringify(user.userId)
+    //     })
+    //     // chrome.runtime.openOptionsPage()
+    //     window.location.href = "account.html";
+
+
+
+    //     // alert(user.userId)
+    // } else {
+    //     alert("Пользователя с такими данными нет")
+    // }
 
 }
 
@@ -84,22 +113,24 @@ async function registration() {
         alert("Пароль не совпадает")
         return
     }
-
-    let user
     
-    let response = await fetch(`${requestURL}/user/login=${login}`)
-    // console.log(response)
-    try {
-        user = await response.json()
-    } catch(e) {
-        user=""
-    }
+
+    // let user
+    
+    // let response = await fetch(`${requestURL}/user/login=${login}`)
+    // // console.log(response)
+    // try {
+    //     user = await response.json()
+    // } catch(e) {
+    //     user=""
+    // }
    
     
-    if(user != "") {
-        alert("Пользователь с таким логином уже зарегистрирован")
-        return
-    }
+    // if(user != "") {
+    //     alert("Пользователь с таким логином уже зарегистрирован")
+    //     return
+    // }
+
 
     let data = JSON.stringify({
         userName: name,
@@ -109,7 +140,7 @@ async function registration() {
     })
 
     
-    await fetch(`${requestURL}/user`, {
+    let response = await fetch(`${requestURL}/user/reg`, {
         method: 'POST',
         body: data,
         headers: {
@@ -117,26 +148,34 @@ async function registration() {
         },
     })
 
+    if(response.status === 200) {
+        alert("Успешная регистрация")
+    } else if(response.status === 403) {
+        alert("Пользователь с таким логином уже зарегистрирован")
+    } else {
+        alert("Ошибка регистрации")
+    }
+
     // реализация отправки всех гостевых настроек в аккаунт нового пользователя
 
 
 
-    console.log("Успех")
+    
 }
 
 
-// на странице аккаунта получаем данные из бд по id пользователя
+// на странице аккаунта получаем данные из бд по jwt пользователя
 
 let checkAccPage = document.querySelector('.profileBlock')
 
 if(checkAccPage) {
     let userId = JSON.parse(localStorage.getItem('userId'))
     console.log(userId)
-    if(userId === 0) {
+    if(localStorage.getItem('jwt') === 0) {
         
         window.location.href = "auth.html";
     } else {
-        getUserData(userId)
+        getUserData()
     }
     // console.log(localStorage.getItem('userId'))
     
@@ -147,10 +186,19 @@ if(checkAccPage) {
 }
 
 //функция для загрузки данных на страницу аккаунта
-async function getUserData(userId) {
+async function getUserData() {
     // console.log(userId)
-    let response = await fetch(`${requestURL}/user/id=${userId}`)
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/user/id`, {
+        method: 'GET',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
+    }
+    
+    )
     let user = await response.json()
+    // console.log(user)
     let name = user.userSurname + " " + user.userName
     document.querySelector('#profileBlock__name').textContent = name    
 }
@@ -164,9 +212,9 @@ if(logOutBtn) {
 }
 
 function exit() {
-    localStorage.setItem('userId', 0)
+    localStorage.setItem('jwt', 0)
     chrome.storage.local.set({
-        userId: 0
+        jwt: 0
     })
     window.close()
     // chrome.runtime.openOptionsPage()
@@ -178,7 +226,14 @@ function exit() {
 // функция получения уникальных дат из бд
 let sitesForPrintJournal
 async function getUniqDates() {
-    let response = await fetch(`${requestURL}/deletedSite/id=${localStorage.getItem('userId')}`) //получаю сайты пользователя
+    // let response = await fetch(`${requestURL}/deletedSite/id=${localStorage.getItem('userId')}`) //получаю сайты пользователя
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/deletedSite/id`, { //получаю сайты пользователя
+        method: 'GET',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
+    }) 
     let sites = await response.json()
     // console.log(sites)
     let arrUniqDates = []
@@ -224,7 +279,16 @@ async function printJournal() {
     for(let i=0; i<arrUniqDates.length; i++) {
         console.log(new Date(new Date(arrUniqDates[i]).toDateString()))
         let date = new Date(new Date(arrUniqDates[i]).toDateString()).toISOString()
-        let response = await fetch(`${requestURL}/deletedSite/${localStorage.getItem('userId')}&${date}`) //получаю сайты пользователя
+        // let response = await fetch(`${requestURL}/deletedSite/${localStorage.getItem('userId')}&${date}`) //получаю сайты пользователя
+        
+        let jwt = JSON.parse(localStorage.getItem('jwt'))
+        let response = await fetch(`${requestURL}/deletedSite/date=${date}`, { //получаю сайты пользователя
+            method: 'GET',
+            headers: {   
+                'Authorization': `Bearer ${jwt}`
+            },
+        }) 
+        
         let sites = await response.json()
         console.log(sites)
         let day = 
@@ -284,9 +348,12 @@ async function deleteFromJournal() {
     id = id.slice(8)
     // console.log(id)
     let journalItem = document.getElementById(`btnDel__${id}`).parentNode
-    
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
     fetch(`${requestURL}/deletedSite/id=${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
     })
 
     // если удалили последний элемент за день, удаляем блок дня
@@ -324,9 +391,19 @@ async function clearJournal() {
     }
     document.querySelector(".journalBlockEmpty").style.display = 'flex'
 
-    fetch(`${requestURL}/deletedSite/userId=${localStorage.getItem('userId')}`, {
-        method: 'DELETE'
-    })
+    // fetch(`${requestURL}/deletedSite/userId=${localStorage.getItem('userId')}`, {
+    //     method: 'DELETE'
+    // })
+
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    await fetch(`${requestURL}/deletedSite/userId`, {
+        method: 'DELETE',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
+    }) 
+
+
 }
 
 
@@ -337,13 +414,25 @@ if(exportXLSXbtn) {
     exportXLSXbtn.addEventListener('click', exportXLSX)
 }
 
-function exportXLSX() {
+async function exportXLSX() {
     if(!document.querySelector(".journal__item")) {
         alert("Журнал пустой!")
         return
     }
 
-    window.open(`${requestURL}/deletedSite/exportXLSX/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
+
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/user/id`, {
+        method: 'GET',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
+    }
+    
+    )
+    let user = await response.json()
+
+    window.open(`${requestURL}/deletedSite/exportXLSX/${user.userId}&${new Date().getTimezoneOffset()}`)
     
 }
 
@@ -354,12 +443,75 @@ if(exportCSVbtn) {
     exportCSVbtn.addEventListener('click', exportCSV)
 }
 
-function exportCSV() {
+async function exportCSV() {
     if(!document.querySelector(".journal__item")) {
         alert("Журнал пустой!")
         return
     }
 
-    window.open(`${requestURL}/deletedSite/exportCSV/${localStorage.getItem('userId')}&${new Date().getTimezoneOffset()}`)
+    let jwt = JSON.parse(localStorage.getItem('jwt'))
+    let response = await fetch(`${requestURL}/user/id`, {
+        method: 'GET',
+        headers: {   
+            'Authorization': `Bearer ${jwt}`
+        },
+    }
+    
+    )
+    let user = await response.json()
+    window.open(`${requestURL}/deletedSite/exportCSV/${user.userId}&${new Date().getTimezoneOffset()}`)
     
 }
+
+
+// реализация смены языка
+
+
+async function Language() {
+    let words
+    let english = JSON.parse(localStorage.getItem('language'))
+    let url
+    if (english !== true) {
+        url = './translations/ru.json';
+    } else {
+        url = './translations/eng.json';
+    }
+    let response = await fetch(url);
+    words = await response.json();
+
+    for (let key in words) {
+        let elem = document.querySelector('.lng-'+key)
+        if (elem) {
+            
+            elem.textContent = words[key]
+            
+            
+        }
+    }
+    if(document.querySelector('.lng-inputLog')) {
+        
+        document.querySelector('.lng-inputLog').placeholder = words['inputLog']
+    }
+
+    if(document.querySelector('.lng-inputPas')) {
+        document.querySelector('.lng-inputPas').placeholder = words['inputPas']
+    }
+
+    if(document.querySelector('.lng-inputName')) {
+        document.querySelector('.lng-inputName').placeholder = words['inputName']
+    }
+    if(document.querySelector('.lng-inputSurname')) {
+        document.querySelector('.lng-inputSurname').placeholder = words['inputSurname']
+    }
+    if(document.querySelector('.lng-inputLogin')) {
+        document.querySelector('.lng-inputLogin').placeholder = words['inputLogin']
+    }
+    if(document.querySelector('.lng-inputPassword')) {
+        document.querySelector('.lng-inputPassword').placeholder = words['inputPassword']
+    }
+    if(document.querySelector('.lng-inputRepPas')) {
+        document.querySelector('.lng-inputRepPas').placeholder = words['inputRepPas']
+    }
+}
+
+Language()

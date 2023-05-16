@@ -10,23 +10,24 @@ types.setTypeParser(1114, function(stringValue) {
 });
 
 class deletedSiteController {
-    async createdeletedSite(req, res) {
+    async createDeletedSite(req, res) {
         // const {wlUrl, userId} = req.body
         // const newItem =  await db.query(`insert into "WhiteList" ("wlUrl", "userId") values ($1, $2) returning *`, [wlUrl, userId])
         // res.json(newItem.rows[0])
 
-        const {dsUrl, dsDate, userId, dsTitle} = req.body
+        const {dsUrl, dsDate, dsTitle} = req.body
+        const userId = req.userId
         const newSite = await db.query(`insert into "deletedSite" ("dsUrl", "dsDate", "userId", "dsTitle") values ($1, $2, $3, $4) returning *`, [dsUrl, dsDate, userId, dsTitle])
         res.json(newSite.rows[0])
     }
     async getUserDeletedSites(req, res) {
-        const id = req.params.id
+        const id = req.userId
         const items = await db.query('select * from "deletedSite" where "userId" = $1', [id])
         res.json(items.rows)
     }
 
     async getUserDeletedSitesForDate(req, res) {
-        const id = req.params.id
+        const id = req.userId
         let date = req.params.date
         date = new Date(date)
 
@@ -48,7 +49,7 @@ class deletedSiteController {
     }
 
     async deleteUserSites(req, res) {
-        const userId = req.params.id
+        const userId = req.userId
         const item = await db.query('delete from "deletedSite" where "userId" = $1', [userId])
         res.json(item.rows[0])
     }
