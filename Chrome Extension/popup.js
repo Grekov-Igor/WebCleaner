@@ -76,9 +76,7 @@ class LocalStorageUtil {
     delElemet(id) {
         let elements = this.getElements()
         elements.splice(id, 1)
-        // for (let i = id; i < elements.length; i++) {
-        //     elements[i].number = elements[i].number - 1
-        // }
+     
         localStorage.setItem(this.keyName, JSON.stringify(elements))
         if (this.keyName === 'links') {
             chrome.storage.local.set({
@@ -89,7 +87,6 @@ class LocalStorageUtil {
                 blackLinks: JSON.stringify(elements)
             })
         }
-        // chrome.storage.local.set({links: JSON.stringify(elements)})
     }
 }
 
@@ -191,9 +188,6 @@ if (buttonClear) {
 
 
 let whiteList = [] //массив для хранения белого списка
-// for (let i = 0; i < whiteList.length; i++) {
-//     whiteList[i] = whiteList[i].link
-// }
 
 //обновление whiteList из бд
 async function whiteListWithDB() {
@@ -504,14 +498,10 @@ function chooseTimePeriod() {
 
 
 let buttonDeleteOnThisPage = document.getElementById('buttonDeleteOnThisPage')
-// console.log(buttonDeleteOnThisPage)
-// function print() {
-//     alert(tabs + "\n" + tabShort)
-// }
+
 
 if (buttonDeleteOnThisPage) {
     buttonDeleteOnThisPage.addEventListener('click', deleteOnThisPage)
-    // buttonDeleteOnThisPage.addEventListener('click', test)
 }
 
 
@@ -653,12 +643,6 @@ function getCheckBoxesFromLocalStorage() {
 }
 
 
-
-
-
-
-
-
 // реализация функций на странице белого листа
 
 // класс для работы с ссылками
@@ -668,8 +652,6 @@ class LinkItem {
         this.link = link
     }
 }
-
-
 
 // const localStorageLinks = new LocalStorageUtil('links')
 let links = []
@@ -705,20 +687,14 @@ let numberOfWhite = 0
 console.log(localStorageLinks.getElements().length)
 // console.log(document.querySelector('#listBlock_white'))
 if (document.querySelector('#listBlock_white')) {
-    // if (localStorageLinks.getElements().length !== 0) {
-    //     printWhiteList(localStorageLinks.getElements().length, localStorageLinks.getElements())
-    // }
+    
     printWhiteListWithDB()
 } else if (document.querySelector('#listBlock_black')) {
-    // if (localStorageBlackLinks.getElements().length !== 0) {
-    //     printWhiteList(localStorageBlackLinks.getElements().length, localStorageBlackLinks.getElements())
-    // }
+    
     printBlackListWithDB()
 }
 
-// if (localStorageLinks.getElements().length !== 0 && document.querySelector('.list__block')) {
-//     printWhiteList()
-// }
+
 
 //функция отрисовки списка из local storage на странице
 
@@ -728,8 +704,6 @@ let btnDelete
 
 function printWhiteList(nOW, linksS) {
 
-    // numberOfWhite = localStorageLinks.getElements().length
-    // links = localStorageLinks.getElements()
     numberOfWhite = nOW
     links = linksS
     linksNumber = 0
@@ -931,14 +905,6 @@ function deleteFromWhite() {
         numberOfWhite = localStorageBlackLinks.getElements().length
     }
 
-    // localStorageLinks.delElemet(id - 1)
-    // if (localStorageLinks.getElements().length !== 0) {
-    //     printWhiteList()
-    // } else {
-    //     document.getElementsByClassName('empty__plug')[0].style.display = 'flex'
-    // }
-    // numberOfWhite = localStorageLinks.getElements().length
-
     console.log(numberOfWhite)
 
 }
@@ -1027,11 +993,6 @@ function changeBtnThemeContent() {
 
 // при нажатии на кнопку входа переход на полноэкранную страницу авторизации
 
-// let btnLogIn = document.querySelector("#btnLogIn")
-
-// if (btnLogIn) {
-//     btnLogIn.addEventListener('click', goToAuth)
-// }
 
 function goToAuth() {
     chrome.runtime.openOptionsPage()
@@ -1081,66 +1042,6 @@ function goToAcc() {
     window.open(chrome.runtime.getURL('account.html'));
     
 }
-
-
-
-// console.log(result)
-// chrome.storage.local.get(["userId"]).then((result) => {
-    
-    // try {
-    //     // при выходе из аккаунта userID = 0
-    //     userId = JSON.parse(result.userId)
-        
-    //     // console.log(userId)
-    // } catch(error) {
-    //     // если мы сюда попали, значит пока такого поля нет в памяти, значит пользователь ни разу не авторизировался
-    //     // console.log(result.userId)
-    //     userId = 0
-    // }
-    // localStorageUser.putElements(JSON.stringify(userId))
-    // let headerButtons = document.getElementById("header__buttons")
-    // if(userId === 0) {
-    //     headerButtons.insertAdjacentHTML('afterbegin', `
-    //         <button class="button__logIn button" id="btnLogIn">
-    //             <div class="logIn__text">Войти</div>
-    //         </button>
-    //     `)
-    //     let btnLogIn = document.querySelector("#btnLogIn")
-    //     btnLogIn.addEventListener('click', goToAuth)
-    
-
-    // } else {
-    //     headerButtons.insertAdjacentHTML('afterbegin', `
-    //         <img src="img/account.png" alt="" class="header__account" id="header__account">
-    //     `)
-    // }
-
-
-    
-
-// })
-
-// chrome.storage.local.set({
-//     userId: JSON.stringify(0)
-// })
-
-// let url = "https://www.figma.com/"
-// let enc = encodeURIComponent(url)
-// console.log(enc)
-
-
-// console.log((fetch(`${requestURL}/deletedSite/id=${1}`)).json())
-
-// async function t() {
-//     let response = await fetch(`${requestURL}/deletedSite/id=${1}`)
-//     let sites = await response.json()
-//     console.log(sites)
-    
-
-// }
-
-// t()
-
 
 
 //получение url текущей страницы и обрезание лишнего

@@ -17,12 +17,12 @@ class deletedSiteController {
 
         const {dsUrl, dsDate, dsTitle} = req.body
         const userId = req.userId
-        const newSite = await db.query(`insert into "deletedSite" ("dsUrl", "dsDate", "userId", "dsTitle") values ($1, $2, $3, $4) returning *`, [dsUrl, dsDate, userId, dsTitle])
+        const newSite = await db.query(`insert into "DeletedSite" ("dsUrl", "dsDate", "userId", "dsTitle") values ($1, $2, $3, $4) returning *`, [dsUrl, dsDate, userId, dsTitle])
         res.json(newSite.rows[0])
     }
     async getUserDeletedSites(req, res) {
         const id = req.userId
-        const items = await db.query('select * from "deletedSite" where "userId" = $1', [id])
+        const items = await db.query('select * from "DeletedSite" where "userId" = $1', [id])
         res.json(items.rows)
     }
 
@@ -37,20 +37,20 @@ class deletedSiteController {
 
         const datePlusOneSQL = datePlusOne.toISOString().replace("T", " ")
 
-        const items = await db.query(`select * from "deletedSite" where "userId" = $1 and "dsDate" >= $2 and "dsDate" < $3 ORDER BY "dsDate"`, [id, dateSQL, datePlusOneSQL])
+        const items = await db.query(`select * from "DeletedSite" where "userId" = $1 and "dsDate" >= $2 and "dsDate" < $3 ORDER BY "dsDate"`, [id, dateSQL, datePlusOneSQL])
         res.json(items.rows)
 
     }
 
     async deleteSite(req, res) {
         const dsId = req.params.id
-        const item = await db.query('delete from "deletedSite" where "dsId" = $1', [dsId])
+        const item = await db.query('delete from "DeletedSite" where "dsId" = $1', [dsId])
         res.json(item.rows[0])
     }
 
     async deleteUserSites(req, res) {
         const userId = req.userId
-        const item = await db.query('delete from "deletedSite" where "userId" = $1', [userId])
+        const item = await db.query('delete from "DeletedSite" where "userId" = $1', [userId])
         res.json(item.rows[0])
     }
    
@@ -58,7 +58,7 @@ class deletedSiteController {
 
         const id = req.params.id
         const timeZoneOffset = req.params.timeZoneOffset
-        const items = await db.query('select * from "deletedSite" where "userId" = $1 ORDER BY "dsDate"', [id])
+        const items = await db.query('select * from "DeletedSite" where "userId" = $1 ORDER BY "dsDate"', [id])
 
         let sites = items.rows
 
@@ -114,7 +114,7 @@ class deletedSiteController {
     async exportSitesCSV(req, res) {
         const id = req.params.id
         const timeZoneOffset = req.params.timeZoneOffset
-        const items = await db.query('select * from "deletedSite" where "userId" = $1 ORDER BY "dsDate"', [id])
+        const items = await db.query('select * from "DeletedSite" where "userId" = $1 ORDER BY "dsDate"', [id])
 
         let sitesData = items.rows
 
@@ -150,12 +150,7 @@ class deletedSiteController {
 
         res.status(200).end(csvData)
         
-       
-
     }
-
-
-
 }
 
 module.exports = new deletedSiteController()

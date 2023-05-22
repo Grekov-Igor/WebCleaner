@@ -132,13 +132,27 @@ async function registration() {
     // }
 
 
+    let whiteLinks = JSON.parse(localStorage.getItem('links'))
+    let blackLinks = JSON.parse(localStorage.getItem('blackLinks'))
+    let language = JSON.parse(localStorage.getItem('language'))
+    let timePeriod = localStorage.getItem('timePeriod')
+    let lightTheme = JSON.parse(localStorage.getItem('lightTheme'))
+    let checkBoxes = localStorage.getItem('checkBoxes')
+
     let data = JSON.stringify({
         userName: name,
         userSurname: surname,
         userLogin: login,
-        userPassword: password
+        userPassword: password,
+        whiteLinks: whiteLinks,
+        blackLinks: blackLinks,
+        language: language,
+        timePeriod: timePeriod,
+        lightTheme: lightTheme,
+        checkBoxes: checkBoxes
     })
 
+    console.log(JSON.parse(data))
     
     let response = await fetch(`${requestURL}/user/reg`, {
         method: 'POST',
@@ -488,6 +502,7 @@ async function Language() {
             
         }
     }
+    
     if(document.querySelector('.lng-inputLog')) {
         
         document.querySelector('.lng-inputLog').placeholder = words['inputLog']

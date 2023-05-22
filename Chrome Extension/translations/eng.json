@@ -52,7 +52,9 @@
     "exportXLSXbtn": "Exporting the journal to .xlsx",
     "exportCSVbtn": "Exporting the journal to .csv",
     "clrJournalBtn": "Clearing the journal",
-    "emptyJournal": "The journal is empty.<br>You haven't set up a blacklist yet.",
+    
+    "emptyJournal1": "The journal is empty.",
+    "emptyJournal2": "You haven't set up a blacklist yet.",
     "logIn": "Log In",
     "authBlock": "Authorization",
     "inputBlockLogin": "Enter your login",

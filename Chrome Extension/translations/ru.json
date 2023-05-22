@@ -52,7 +52,9 @@
     "exportXLSXbtn": "Экспорт журнала в .xlsx",
     "exportCSVbtn": "Экспорт журнала в .csv",
     "clrJournalBtn": "Очистка журнала",
-    "emptyJournal": "Журнал пуст.<br>Вы пока не настроили черный список.",
+    
+    "emptyJournal1": "Журнал пуст.",
+    "emptyJournal2": "Вы пока не настроили черный список.",
     "logIn": "Войти",
     "authBlock": "Авторизация",
     "inputBlockLogin": "Введите логин",

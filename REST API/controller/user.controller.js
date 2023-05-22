@@ -48,7 +48,7 @@ class userCotroller {
 
     async registration(req, res) {
          try {
-            const {userName, userSurname, userLogin, userPassword} = req.body
+            const {userName, userSurname, userLogin, userPassword, whiteLinks, blackLinks, language, timePeriod, lightTheme, checkBoxes} = req.body
             const users = await db.query('select * from "User" where "userLogin" = $1', [userLogin]) 
             const candidate = users.rows[0]
             // console.log(candidate)
@@ -58,6 +58,19 @@ class userCotroller {
             const hashPassword = bcrypt.hashSync(userPassword, 7); //хеширование пароля перед внесением в бд, 7 - степень хеширования
             // console.log(hashPassword)
             const newPerson = await db.query(`insert into "User" ("userName", "userSurname", "userLogin", "userPassword") values ($1, $2, $3, $4) returning *`, [userName, userSurname, userLogin, hashPassword])
+            const user = await db.query('select * from "User" where "userLogin" = $1', [userLogin])
+            const userId = user.rows[0].userId 
+            const newSwttings = await db.query(`insert into "Settings" ("settingsCheckBoxes", "settingsLightTheme", "settingsEngLang", "settingsTimePeriod", "userId") values ($1, $2, $3, $4, $5) returning *`, [checkBoxes, lightTheme, language, timePeriod, userId])
+            if(whiteLinks !== []) {
+                for(let i=0; i<whiteLinks.length; i++) {
+                    const newItem =  await db.query(`insert into "WhiteList" ("wlUrl", "userId") values ($1, $2) returning *`, [whiteLinks[i], userId])
+                }
+            }
+            if(blackLinks !== []) {
+                for(let i=0; i<blackLinks.length; i++) {
+                    const newItem =  await db.query(`insert into "BlackList" ("blUrl", "userId") values ($1, $2) returning *`, [blackLinks[i], userId])
+                }
+            }
             return res.json({message: "The user has been successfully registered"})
          } catch(e) {
             res.status(400).json({message: "Registration error"})
